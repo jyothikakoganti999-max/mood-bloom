@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoodBloom — Find Your Little Spark</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap');
+:root{--pink:#ff4f9a;--hot:#ed287c;--rose:#ff8fbd;--pale:#fff0f6;--ink:#54243d;--muted:#98677f;--glass:rgba(255,255,255,.72)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);font-family:'DM Sans',sans-serif;background:radial-gradient(circle at 12% 8%,#ffd2e5 0,transparent 28%),radial-gradient(circle at 90% 18%,#f7c5ff 0,transparent 25%),linear-gradient(135deg,#fff7fb,#ffe8f2 48%,#fff4f9);min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;background-image:radial-gradient(#f58bb7 1px,transparent 1px);background-size:22px 22px;z-index:-1}
+.blob{position:fixed;width:260px;height:260px;border-radius:50%;filter:blur(60px);opacity:.28;z-index:-1;animation:float 12s ease-in-out infinite}.b1{background:#ff62a7;top:25%;left:-120px}.b2{background:#c78bff;right:-100px;bottom:5%;animation-delay:-5s}@keyframes float{50%{transform:translate(55px,-35px) scale(1.15)}}
+header{max-width:1180px;margin:auto;padding:22px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;letter-spacing:-.5px}.logo{width:42px;height:42px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#ff4f9a,#c77dff);color:white;box-shadow:0 8px 20px #ef6da755;font-size:22px}.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:700;padding:10px 13px;border-radius:30px}.nav a:hover{background:#fff; color:var(--hot)}
+main{max-width:1180px;margin:auto;padding:15px 5% 70px}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:35px;align-items:center;padding:48px 0 40px}.eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #ffd0e2;padding:8px 13px;border-radius:30px;color:var(--hot);font-size:.78rem;font-weight:800;box-shadow:0 5px 20px #e86a9c14}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,5.5rem);line-height:.99;letter-spacing:-2px;margin:20px 0 18px;color:#632745}.hero h1 span{background:linear-gradient(90deg,#ff3f91,#ba69dc);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:1.06rem;line-height:1.75;color:#93647c;max-width:540px}.primary{border:0;border-radius:30px;padding:14px 22px;color:white;font-weight:800;background:linear-gradient(100deg,#ff4d97,#d36ce8);box-shadow:0 12px 25px #e34c9450;cursor:pointer;transition:.2s}.primary:hover{transform:translateY(-3px);box-shadow:0 16px 30px #e34c9466}.secondary{border:1px solid #f6bad2;background:#fff9fc;color:#b5447c;border-radius:30px;padding:13px 18px;font-weight:800;cursor:pointer}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+.hero-art{min-height:350px;position:relative;display:grid;place-items:center}.orbit{width:min(340px,75vw);height:min(340px,75vw);border-radius:50%;background:linear-gradient(145deg,#ffb9d7,#f4c6ff);box-shadow:inset 12px 12px 30px #fff9,0 25px 60px #d96b9c3b;display:grid;place-items:center;position:relative;animation:bob 5s ease-in-out infinite}.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #fff9;border-radius:50%;inset:24px}.orbit:after{inset:48px;border-style:dashed}.heart{font-size:120px;filter:drop-shadow(0 15px 12px #d04d8b44);animation:beat 2s infinite}.floaty{position:absolute;background:#ffffffd9;box-shadow:0 12px 30px #bd598b25;border:1px solid #fff;border-radius:18px;padding:12px 15px;font-weight:800;animation:bob 4s ease-in-out infinite}.f1{top:12%;left:0}.f2{right:-1%;top:28%;animation-delay:-1.2s}.f3{bottom:12%;left:8%;animation-delay:-2s}@keyframes bob{50%{transform:translateY(-12px) rotate(2deg)}}@keyframes beat{50%{transform:scale(1.1)}}
+.section{margin-top:48px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:20px}.kicker{color:var(--hot);font-size:.75rem;text-transform:uppercase;letter-spacing:2px;font-weight:800}.section h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);margin:5px 0;color:#632745}.sub{color:#9a7085;margin:0;line-height:1.6}
+.panel{background:var(--glass);border:1px solid #fff;box-shadow:0 18px 50px #a94e7920, inset 0 1px #fff;border-radius:28px;padding:25px;backdrop-filter:blur(16px)}
+.moods{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.mood{border:1px solid #f7c8dc;background:#fff9fc;border-radius:20px;padding:17px 8px;cursor:pointer;text-align:center;color:#86536d;font-weight:800;transition:.22s}.mood .emoji{font-size:2rem;display:block;margin-bottom:8px}.mood small{font-size:.78rem}.mood:hover,.mood.active{transform:translateY(-5px);background:linear-gradient(145deg,#fff,#ffe1ee);border-color:#ff71aa;box-shadow:0 12px 24px #ec77a333;color:#d62f7e}
+.happy-reactions[hidden]{display:none!important}.happy-reactions{margin-top:18px;padding:17px;border-radius:20px;background:linear-gradient(120deg,#fff3c9,#ffe1ef);border:1px solid #ffd6a4}.happy-reactions h3{margin:0 0 5px;color:#b94b79}.happy-reactions p{margin:4px 0 12px}.reaction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.reaction-card{display:flex;flex-direction:column;gap:7px;padding:13px;border-radius:16px;background:#ffffffd9;text-align:center;color:#81445f}.reaction-card span{font-size:2rem}.reaction-card strong{font-size:.88rem;line-height:1.35}.reaction-card small{font-size:.75rem;color:#b44d7d}.meme-card{min-height:150px;justify-content:center;border:1px dashed #f2a9c9;box-shadow:0 5px 14px #d66d9c18}.meme-card:nth-child(odd){background:linear-gradient(145deg,#fff,#fff0f7)}.meme-card:nth-child(even){background:linear-gradient(145deg,#fff8dc,#ffe8f3)}@media(max-width:600px){.reaction-grid{grid-template-columns:1fr}}
+.result{display:none;margin-top:18px;background:linear-gradient(110deg,#fff0f7,#f9eaff);border:1px solid #f7c6df;border-radius:22px;padding:20px;animation:rise .35s ease}.result.show{display:block}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.result h3{margin:0 0 8px;color:#c5367c}.result p{margin:5px 0;color:#81536b;line-height:1.6}.result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.feature{background:var(--glass);border:1px solid #fff;border-radius:24px;padding:21px;box-shadow:0 12px 35px #a94e7918;transition:.25s}.feature:hover{transform:translateY(-6px);box-shadow:0 20px 38px #a94e7928}.feature-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:#ffe0ed;font-size:1.55rem}.feature h3{margin:15px 0 7px}.feature p{margin:0;color:#9a7085;line-height:1.55;font-size:.92rem}
+.play-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}.game-card{background:linear-gradient(145deg,#fff,#fff0f7);border:1px solid #fff;border-radius:26px;padding:24px;box-shadow:0 14px 35px #a94e7918}.game-card h3{margin:8px 0}.game-card p{color:#9a7085;line-height:1.55}.game-top{display:flex;align-items:center;justify-content:space-between}.pill{font-size:.72rem;font-weight:800;color:#c13d7b;background:#ffe0ed;padding:7px 10px;border-radius:30px}.game-question{font-weight:800;font-size:1.15rem;margin:18px 0}.choices{display:grid;grid-template-columns:1fr 1fr;gap:9px}.choice{border:1px solid #f1bfd5;border-radius:14px;background:white;padding:12px;color:#79435e;font-weight:700;cursor:pointer}.choice:hover{border-color:#ff5c9e;background:#fff3f8}.feedback{min-height:25px;font-weight:800;color:#c43b7b;margin-top:12px}.game-buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.joke-box{background:linear-gradient(130deg,#ffdaea,#f3dcff);border-radius:26px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden}.joke-box .big{font-size:3rem}.joke-text{font-family:'Playfair Display',serif;font-size:1.35rem;line-height:1.5;color:#713052;max-width:700px}
+.journal{display:grid;grid-template-columns:1fr auto;gap:12px}.journal textarea{width:100%;min-height:110px;border:1px solid #f2bfd5;border-radius:18px;padding:15px;font:inherit;color:#66304c;resize:vertical;background:#fffafd;outline:none}.journal textarea:focus{border-color:#ff62a2;box-shadow:0 0 0 4px #ffb6d433}.saved{margin-top:14px;display:grid;gap:9px}.entry{background:#fff8fc;border:1px solid #f8d3e3;padding:13px 15px;border-radius:15px;color:#87516d;line-height:1.5}.entry time{display:block;font-size:.72rem;color:#bd7a9a;margin-bottom:5px}
+footer{text-align:center;color:#a47a8f;padding:30px 10px 10px;font-size:.85rem}footer strong{color:#ce4284}.sparkle{position:fixed;pointer-events:none;font-size:20px;animation:pop 1s ease-out forwards;z-index:20}@keyframes pop{0%{opacity:1;transform:translateY(0) scale(.5)}100%{opacity:0;transform:translateY(-90px) scale(1.5)}}
+
+.todo-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:16px}
+.todo-side{background:linear-gradient(145deg,#ffdaeb,#f2ddff);border-radius:25px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:270px}
+.todo-side h3{font-family:'Playfair Display',serif;font-size:1.8rem;margin:12px 0 8px;color:#713052}
+.todo-side p{color:#87536e;line-height:1.6}
+.progress-track{height:11px;background:#ffffffa8;border-radius:30px;overflow:hidden;margin:12px 0 7px}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#ff4d97,#bd70e9);border-radius:30px;transition:width .3s}
+.todo-card{background:var(--glass);border:1px solid #fff;border-radius:25px;padding:22px;box-shadow:0 14px 35px #a94e7918}
+.todo-form{display:grid;grid-template-columns:1fr auto;gap:9px;margin:13px 0}
+.todo-form input,.todo-form select{min-width:0;border:1px solid #f1bfd5;border-radius:13px;padding:12px;background:#fffafd;color:#713052;font:inherit;outline:none}
+.todo-form input:focus,.todo-form select:focus{border-color:#ff62a2;box-shadow:0 0 0 3px #ffb6d433}
+.todo-tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 13px}
+.todo-filter{border:1px solid #f3c5d9;background:#fff8fc;color:#9a5577;border-radius:30px;padding:7px 12px;font-size:.78rem;font-weight:800;cursor:pointer}
+.todo-filter.active{background:#ffdfed;border-color:#ff76ad;color:#c33178}
+.todo-list{display:grid;gap:9px;max-height:340px;overflow:auto;padding-right:3px}
+.todo-item{display:flex;align-items:center;gap:10px;background:#fff9fc;border:1px solid #f8d5e4;padding:11px 12px;border-radius:15px}
+.todo-item input{accent-color:#ed4b91;width:18px;height:18px;flex-shrink:0}
+.todo-item .task{flex:1;line-height:1.4;overflow-wrap:anywhere}
+.todo-item.done .task{text-decoration:line-through;color:#bd91a7}
+.todo-item small{display:block;color:#bd7a9a;font-size:.7rem;margin-top:3px}
+.delete-task{border:0;background:#ffe5f0;color:#c13d7b;border-radius:10px;padding:7px 9px;cursor:pointer;font-weight:900}
+.empty-state{text-align:center;color:#a77a91;padding:24px 10px}
+.extra-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.mini-panel{background:var(--glass);border:1px solid #fff;border-radius:22px;padding:20px;box-shadow:0 12px 30px #a94e7915}
+.mini-panel h3{margin:8px 0}.mini-panel p{color:#987087;line-height:1.55;font-size:.9rem}
+.water-drops{display:flex;gap:7px;margin:13px 0;flex-wrap:wrap}
+.water-drop{border:1px solid #f3bfd5;background:#fff8fc;border-radius:12px;padding:9px 11px;font-size:1.25rem;cursor:pointer}
+.water-drop.active{background:#ffd8e9;border-color:#ed4b91}
+.timer-display{font-family:'Playfair Display',serif;font-size:2.5rem;color:#d33d83;font-weight:800;margin:10px 0}
+
+.study-item,.quick-note{background:#fff8fc;border:1px solid #f8d3e3;padding:10px 12px;border-radius:13px;color:#87516d;line-height:1.45;font-size:.88rem}
+.study-item strong{color:#b83c79}
+
+@media(max-width:800px){.todo-wrap{grid-template-columns:1fr}.extra-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.extra-grid{grid-template-columns:1fr}.todo-form{grid-template-columns:1fr}.todo-form button{justify-self:start}}
+
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding-top:25px}.hero-art{min-height:300px}.moods{grid-template-columns:repeat(3,1fr)}.feature-grid{grid-template-columns:1fr 1fr}.play-layout{grid-template-columns:1fr}.nav{display:none}.section-head{align-items:start;flex-direction:column}}
+@media(max-width:480px){main{padding-left:4%;padding-right:4%}.hero h1{font-size:3.35rem}.feature-grid{grid-template-columns:1fr}.panel{padding:17px}.mood{padding:13px 5px}.joke-box{align-items:start;flex-direction:column}.journal{grid-template-columns:1fr}.journal .primary{justify-self:start}}
+
+.home-choices{padding:34px 0 22px}
+.home-intro{text-align:center;max-width:760px;margin:0 auto 24px}
+.home-intro h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.08;margin:10px 0;color:#783c60}
+.home-intro h1 span{color:#e34d91}
+.home-intro p{color:#956b81;font-size:1.05rem}
+.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.choice-card{position:relative;z-index:2;display:block;text-decoration:none;color:inherit;padding:27px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,79,154,.18);border:1px solid #f2c8dc;border-radius:26px;background:linear-gradient(145deg,#fffafd,#ffeaf4);box-shadow:0 12px 32px #d88aaf20;transition:transform .2s,box-shadow .2s}
+.choice-card:hover{transform:translateY(-5px);box-shadow:0 18px 38px #d88aaf35}
+.fun-choice{background:linear-gradient(145deg,#fffafd,#ffe6f1)}
+.choice-emoji{font-size:2.6rem;margin-bottom:12px}
+.choice-tag{font-size:.7rem;letter-spacing:1.5px;font-weight:800;color:#c45b8b}
+.choice-card h2{font-size:1.8rem;margin:7px 0;color:#813e62}
+.choice-card p{color:#8f6b7e;line-height:1.6;max-width:440px}
+.choice-link{display:inline-block;margin-top:8px;color:#d84488;font-weight:800}
+.pdf-panel{background:linear-gradient(145deg,#fffafd,#ffedf5);border:1px solid #f2c8dc;border-radius:24px;padding:22px;box-shadow:0 10px 28px #d88aaf18}
+.pdf-upload{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0}
+.pdf-upload input{max-width:100%;padding:10px;background:white;border:1px solid #efbfd4;border-radius:12px}
+.pdf-status{color:#966b82;font-size:.92rem;margin:8px 0}
+.pdf-summary-output{white-space:pre-wrap;line-height:1.7;color:#75445f;background:#fff;border:1px solid #f3d4e2;border-radius:16px;padding:16px;min-height:70px;margin-top:12px}
+.pdf-small{font-size:.83rem;color:#9b7890}
+@media(max-width:680px){.choice-grid{grid-template-columns:1fr}.choice-card{padding:22px}}
+
+.tap-modal{display:none;position:fixed;inset:0;z-index:9999;background:#4d2945a8;backdrop-filter:blur(7px);align-items:center;justify-content:center;padding:18px}
+.tap-modal.show{display:flex}
+.tap-card{position:relative;width:min(100%,440px);text-align:center;background:linear-gradient(145deg,#fffafd,#ffe8f3);border:1px solid #f5c6dc;border-radius:28px;padding:30px 24px;box-shadow:0 25px 80px #3d173755;animation:tapPop .28s ease-out}
+@keyframes tapPop{from{opacity:0;transform:scale(.86) translateY(15px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.tap-close{position:absolute;right:14px;top:10px;border:0;background:#ffe1ee;color:#9b4d72;border-radius:50%;width:34px;height:34px;font-size:24px;cursor:pointer}
+.tap-kicker{font-size:.7rem;letter-spacing:1.5px;font-weight:900;color:#cf5b91}
+.tap-card h2{color:#813e62;margin:12px 0 8px}
+.tap-card p{color:#936b80;line-height:1.5}
+.stress-bubble{display:block;margin:14px auto 8px;border:3px solid #f3bdd5;background:radial-gradient(circle at 35% 25%,#fff,#ffd8e9);border-radius:50%;width:132px;height:132px;font-size:4rem;cursor:pointer;box-shadow:0 12px 25px #d97aa944;transition:transform .12s}
+.stress-bubble:active{transform:scale(.82) rotate(-10deg)}
+.tap-count{font-weight:900;color:#a84d79;margin:10px}
+.tap-track{height:10px;background:#f8d8e7;border-radius:20px;overflow:hidden}
+.tap-track div{height:100%;width:0;background:linear-gradient(90deg,#f18ab8,#c75a9b);border-radius:20px;transition:width .2s}
+.tap-footnote{font-size:.82rem!important;margin-bottom:0}
+@media(prefers-reduced-motion:reduce){.tap-card{animation:none}.stress-bubble{transition:none}}
+
+/* MoodBloom Firebase sign-in gate */
+body.auth-locked header, body.auth-locked main { display:none !important; }
+.auth-gate{min-height:100vh;display:grid;place-items:center;padding:24px 16px;position:relative;z-index:5}
+.auth-card{width:min(100%,440px);padding:30px 25px;border:1px solid #fff;border-radius:30px;background:rgba(255,255,255,.86);box-shadow:0 22px 65px #a94e7930;text-align:center;backdrop-filter:blur(18px)}
+.auth-logo{width:64px;height:64px;margin:0 auto 14px;border-radius:22px;display:grid;place-items:center;color:white;font-size:32px;background:linear-gradient(135deg,#ff4f9a,#c77dff);box-shadow:0 10px 25px #ef6da755}
+.auth-card h1{font-family:'Playfair Display',serif;color:#713052;font-size:2.15rem;margin:8px 0}
+.auth-card p{color:#93647c;line-height:1.6}
+.auth-name{width:100%;margin:12px 0 10px;border:1px solid #f1bfd5;border-radius:14px;padding:14px;background:#fffafd;color:#713052;font:inherit;outline:none}
+.google-login{width:100%;display:flex;justify-content:center;align-items:center;gap:11px;border:1px solid #eadde4;border-radius:15px;padding:14px;background:white;color:#4b3942;font:700 1rem 'DM Sans',sans-serif;cursor:pointer;box-shadow:0 5px 16px #a94e7910}
+.google-login:disabled{opacity:.6;cursor:wait}
+.google-g{font-weight:900;font-size:1.25rem;color:#4285f4}
+.auth-status{min-height:24px;margin-top:13px!important;font-size:.88rem}
+.auth-userbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.auth-userbar span{font-size:.82rem;color:#93647c;font-weight:700}
+.auth-logout{border:1px solid #f6bad2;background:#fff9fc;color:#b5447c;border-radius:30px;padding:10px 14px;font-weight:800;cursor:pointer}
+@media(max-width:520px){.auth-card{padding:26px 19px}.auth-userbar{justify-content:center}}
+
+</style>
+</head>
+<body class="auth-locked">
+<div class="blob b1"></div><div class="blob b2"></div>
+
+<div class="auth-gate" id="authGate">
+  <section class="auth-card" aria-labelledby="authTitle">
+    <div class="auth-logo">✿</div>
+    <div class="eyebrow">✦ YOUR LITTLE HAPPY PLACE</div>
+    <h1 id="authTitle">Welcome to MoodBloom</h1>
+    <p>Create your account once, then log in from any device. Your saved MoodBloom data will sync too. 🌷</p>
+    <input class="auth-name" id="usernameInput" type="text" maxlength="24" autocomplete="username" placeholder="Choose a username">
+    <input class="auth-name" id="passwordInput" type="password" minlength="6" autocomplete="new-password" placeholder="Create a password (6+ characters)">
+    <button class="google-login" id="createAccountButton" type="button">✿ Create account</button>
+    <button class="auth-logout" id="loginButton" type="button" style="width:100%;margin-top:10px">Log in</button>
+    <p class="auth-status" id="authStatus" role="status">Use a username and password you can remember. Your password is handled securely by Firebase.</p>
+  </section>
+</div>
+
+<header>
+  <div class="brand"><div class="logo">✿</div> mood<span style="color:#ed4c91">bloom</span></div>
+  <nav class="nav"><a href="#home-choices">Home</a><a href="#pdf-summary">PDF summary</a><a href="#todo">To-do</a><a href="#mood">Fun side</a></nav>
+  <div class="auth-userbar" id="authUserbar" hidden><span id="signedInLabel"></span><button class="auth-logout" id="signOutButton" type="button">Log out</button></div><button class="secondary" onclick="surprise()">✨ Surprise me</button>
+</header>
+<main>
+<section class="home-choices" id="home-choices">
+ <div class="home-intro"><div class="eyebrow">✦ WELCOME TO MOODBLOOM</div><h1>What would you like to do <span>today?</span></h1><p>Choose your space — focus on your studies or take a fun little break.</p></div>
+ <div class="choice-grid">
+  <a class="choice-card study-choice" href="#pdf-summary" onclick="goToSection(event, 'pdf-summary')"><div class="choice-emoji">📚</div><div class="choice-tag">LEARN · PLAN · GROW</div><h2>Study Side</h2><p>Upload a PDF and get a quick summary, plan your revision, track tasks and prepare for exams.</p><span class="choice-link">Explore Study Side →</span></a>
+  <a class="choice-card fun-choice" href="#mood" onclick="goToSection(event, 'mood')"><div class="choice-emoji">🎀</div><div class="choice-tag">PLAY · SMILE · RELAX</div><h2>Fun Side</h2><p>Check your mood, enjoy puzzles and jokes, collect kind words and give your brain a happy break.</p><span class="choice-link">Explore Fun Side →</span></a>
+ </div>
+</section>
+<section class="hero">
+ <div>
+  <div class="eyebrow">✦ A little sunshine for every kind of day</div>
+  <h1>Find your<br><span>little spark.</span></h1>
+  <p>A feel-good corner made just for you. Pick your mood, collect a kind word, play a tiny brain game and leave with a little more sparkle.</p>
+  <div class="hero-actions"><button class="primary" onclick="document.querySelector('#mood').scrollIntoView({behavior:'smooth'})">Explore my mood&nbsp; →</button><button class="secondary" onclick="document.querySelector('#play').scrollIntoView({behavior:'smooth'})">Enter the fun zone ♡</button></div>
+ </div>
+ <div class="hero-art"><div class="orbit"><div class="heart">💗</div></div><div class="floaty f1">✨ You are magic</div><div class="floaty f2">🌷 Take a breath</div><div class="floaty f3">🦋 Good vibes only</div></div>
+</section>
+<section class="section" id="mood">
+ <div class="section-head"><div><div class="kicker">01 · Check in with yourself</div><h2>What's the vibe today?</h2><p class="sub">No cap, every mood is valid. Pick your current vibe.</p></div><span class="pill">YOUR MOOD, YOUR MOMENT</span></div>
+ <div class="panel"><div class="moods">
+  <button class="mood" onclick="pickMood('Happy',this)"><span class="emoji">😊</span><small>Main character energy</small></button>
+  <button class="mood" onclick="pickMood('Sad',this)"><span class="emoji">🥺</span><small>In my feels</small></button>
+  <button class="mood" onclick="pickMood('Angry',this)"><span class="emoji">😤</span><small>Low-key heated</small></button>
+  <button class="mood" onclick="pickMood('Tired',this)"><span class="emoji">😴</span><small>Battery at 2%</small></button>
+  <button class="mood" onclick="pickMood('Stressed',this)"><span class="emoji">🫠</span><small>37 tabs open</small></button>
+  <button class="mood" onclick="pickMood('Confident',this)"><span class="emoji">😎</span><small>Unbothered era</small></button>
+ </div><div class="result" id="moodResult"><h3 id="moodTitle">A little note for you 💌</h3><p id="compliment"></p><p><strong>Try this:</strong> <span id="activity"></span></p><div class="happy-reactions" id="happyReactions" hidden><h3>😂 Happy mode: activated!</h3><p>Your little collection of happy memes & comedy reactions:</p><div class="reaction-grid"><div class="reaction-card meme-card"><span>🕺💃</span><strong>POV: One thing goes right and suddenly...</strong><small>THIS IS MY ERA. EVERYTHING IS POSSIBLE. ✨</small></div><div class="reaction-card meme-card"><span>😭🤣</span><strong>Me laughing before I even finish my own joke</strong><small>MY HUMOUR IS A PRIVATE LANGUAGE.</small></div><div class="reaction-card meme-card"><span>🥳🎉</span><strong>When the assignment gets extended</strong><small>WE HAVE BEEN BLESSED. WE ARE SO BACKKK!</small></div><div class="reaction-card meme-card"><span>😌💅</span><strong>Me after completing one tiny task</strong><small>PRODUCTIVITY ICON. CEO OF GETTING THINGS DONE.</small></div><div class="reaction-card meme-card"><span>🐒📱</span><strong>When I open my phone for one minute</strong><small>3 HOURS LATER: WHAT YEAR IS IT?</small></div><div class="reaction-card meme-card"><span>🧚‍♀️✨</span><strong>Delulu? No. Just aggressively positive.</strong><small>GOOD VIBES ONLY, THANK YOUUU.</small></div></div></div><div class="result-actions"><button class="primary" onclick="newCompliment()">Another kind note ✨</button><button class="secondary" id="cloudGameLaunch" onclick="openTapMood()" hidden>Play the cloud game ☁️</button><button class="secondary" onclick="scrollToGame()">Play a mood game →</button></div></div></div>
+</section>
+
+<div class="tap-modal" id="tapMoodModal" role="dialog" aria-modal="true" aria-labelledby="tapMoodTitle">
+ <div class="tap-card">
+  <button class="tap-close" onclick="closeTapMood()" aria-label="Close">×</button>
+  <div class="tap-kicker">VIBE RESET MINI GAME</div>
+  <h2 id="tapMoodTitle">Let's send those blah vibes away 🫧</h2>
+  <p>Tap the silly floating stress-bubble 7 times. No pressure — just a tiny reset!</p>
+  <button class="stress-bubble" id="stressBubble" onclick="tapMoodBubble()" aria-label="Tap the stress bubble">☁️</button>
+  <div class="tap-count" id="tapCount">0 / 7 taps</div>
+  <div class="tap-track"><div id="tapProgress"></div></div>
+  <p class="tap-footnote">Tiny reminder: you don't have to force a happy mood. This is just a playful break. 💗</p>
+ </div>
+</div>
+
+<section class="section">
+ <div class="section-head"><div><div class="kicker">02 · Tiny things, big smiles</div><h2>Your feel-good toolkit</h2><p class="sub">Little boosts to brighten the in-between moments.</p></div></div>
+ <div class="feature-grid">
+  <article class="feature"><div class="feature-icon">💌</div><h3>Compliment confetti</h3><p>Collect kind words and reminders that you're doing better than you think.</p></article>
+  <article class="feature"><div class="feature-icon">🧩</div><h3>Brain ticklers</h3><p>Quick riddles, emoji puzzles and word games for a playful reset.</p></article>
+  <article class="feature"><div class="feature-icon">😂</div><h3>Giggle garden</h3><p>Fresh silly jokes and funny little lines for your daily dose of laughter.</p></article>
+ </div>
+</section>
+<section class="section" id="play">
+ <div class="section-head"><div><div class="kicker">03 · Play a little</div><h2>The mini fun zone</h2><p class="sub">No pressure, just puzzles. Get one right and earn a sparkle!</p></div><span class="pill">⭐ SPARKLES: <b id="score">0</b></span></div>
+ <div class="play-layout">
+  <div class="game-card"><div class="game-top"><span class="pill">🧠 QUICK RIDDLE</span><span>01 / ∞</span></div><h3>Give your brain a hug.</h3><p>Pick your answer. A new riddle is waiting whenever you're ready.</p><div class="game-question" id="riddle">What has hands but cannot clap?</div><div class="choices" id="riddleChoices"></div><div class="feedback" id="riddleFeedback" aria-live="polite"></div><div class="game-buttons"><button class="secondary" onclick="nextRiddle()">Next riddle ↗</button></div></div>
+  <div class="game-card"><div class="game-top"><span class="pill">🔤 WORD SCRAMBLE</span><span>02 / ∞</span></div><h3>Unscramble the good vibes.</h3><p>Put the letters in the right order to reveal a feel-good word.</p><div class="game-question" id="scramble" style="font-size:1.8rem;letter-spacing:7px;color:#e34d91">L I M S E</div><input id="wordInput" aria-label="Your answer" placeholder="Type your answer..." style="width:100%;border:1px solid #f1bfd5;border-radius:14px;padding:13px;font:inherit;outline:none"><div class="feedback" id="wordFeedback" aria-live="polite"></div><div class="game-buttons"><button class="primary" onclick="checkWord()">Check answer</button><button class="secondary" onclick="nextWord()">New word</button></div></div>
+ </div>
+</section>
+<section class="section" id="laugh">
+ <div class="section-head"><div><div class="kicker">04 · A giggle a day</div><h2>Laugh out loud 😂</h2><p class="sub">Warning: these jokes are proudly silly.</p></div></div>
+ <div class="joke-box"><div><div class="pill">TODAY'S GIGGLE</div><div class="joke-text" id="joke">Why did the teddy bear say no to dessert? Because it was already stuffed! 🧸</div></div><div style="display:flex;flex-direction:column;gap:10px"><div class="big">🤣</div><button class="primary" onclick="newJoke()">Another one!</button></div></div>
+ <p style="color:#9a7085;font-size:.9rem;margin:12px 5px">Fun line of the day: “I'm not lazy, I'm on energy-saving mode.” 🔋</p>
+</section>
+
+
+<section class="section" id="pdf-summary">
+ <div class="section-head"><div><div class="kicker">STUDY SIDE · SMART READING</div><h2>PDF to Quick Summary 📄</h2><p class="sub">Upload your notes or textbook PDF and get the main points in a few seconds.</p></div><span class="pill">YOUR PDF STAYS ON THIS DEVICE</span></div>
+ <div class="pdf-panel">
+  <h3 style="margin:0 0 6px;color:#864765">✨ Make long notes easier to revise</h3>
+  <p style="color:#956b81;margin:0">Choose a text-based PDF. MoodBloom reads the text in your browser and creates a short, extractive summary.</p>
+  <div class="pdf-upload"><input type="file" id="pdfFile" accept="application/pdf,.pdf" aria-label="Upload a PDF file"><button class="primary" id="summarizePdfBtn" onclick="summarizePdf()">Generate summary ✨</button></div>
+  <div class="pdf-status" id="pdfStatus" aria-live="polite">No PDF selected yet.</div>
+  <div id="pdfSummary" class="pdf-summary-output">Your summary will appear here after you upload a PDF.</div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px"><button class="secondary" onclick="copyPdfSummary()">Copy summary</button><button class="secondary" onclick="clearPdfSummary()">Clear</button></div>
+  <p class="pdf-small">Note: This creates a quick summary from sentences in the PDF; it may miss diagrams, scanned pages or important context. Always check the original notes too. PDF reading uses the PDF.js library loaded from a CDN, so an internet connection is needed.</p>
+ </div>
+</section>
+<section class="section" id="todo">
+ <div class="section-head"><div><div class="kicker">STUDY SIDE · STAY ORGANIZED</div><h2>My Study To-do List ✨</h2><p class="sub">Organize assignments, revision tasks and deadlines. Tick each task when it is complete.</p></div><span class="pill">ONE STEP AT A TIME</span></div>
+ <div class="todo-wrap">
+  <div class="todo-side">
+   <div><div style="font-size:2.5rem">🌷</div><h3>You've got this!</h3><p>Small steps still move you forward. Add your tasks, tick them off, and celebrate your progress.</p></div>
+   <div><div style="display:flex;justify-content:space-between;font-weight:800;color:#8d4a6d"><span>Today's progress</span><span id="todoPercent">0%</span></div><div class="progress-track"><div class="progress-fill" id="todoProgress"></div></div><small id="todoCount" style="color:#98677f">0 of 0 tasks completed</small></div>
+  </div>
+  <div class="todo-card">
+   <h3 style="margin:0">📝 My happy little checklist</h3>
+   <form class="todo-form" id="todoForm">
+    <input id="todoInput" maxlength="90" placeholder="Add a task… e.g. Finish my assignment" aria-label="New task" required>
+    <button class="primary" type="submit">＋ Add task</button>
+   </form>
+   <div class="todo-tools">
+    <button class="todo-filter active" data-filter="all" onclick="setTodoFilter('all',this)">All tasks</button>
+    <button class="todo-filter" data-filter="active" onclick="setTodoFilter('active',this)">To do</button>
+    <button class="todo-filter" data-filter="done" onclick="setTodoFilter('done',this)">Completed</button>
+   </div>
+   <div class="todo-list" id="todoList"></div>
+  </div>
+ </div>
+</section>
+<section class="section" id="dailyboost">
+ <div class="section-head"><div><div class="kicker">06 · Make your day count</div><h2>Useful little tools 🌼</h2><p class="sub">A balance of focus, planning and small breaks — not just games.</p></div></div>
+ <div class="extra-grid">
+  <div class="mini-panel"><div class="feature-icon">📚</div><h3>Study sprint planner</h3><p>Choose a subject and topic, then add a focused study session to your plan.</p><input id="studySubject" placeholder="Subject (e.g. Mathematics)" style="width:100%;border:1px solid #f1bfd5;border-radius:12px;padding:11px;margin:5px 0;font:inherit"><input id="studyTopic" placeholder="Topic to revise" style="width:100%;border:1px solid #f1bfd5;border-radius:12px;padding:11px;margin:5px 0;font:inherit"><button class="secondary" onclick="addStudySession()">＋ Add study session</button><div id="studySessions" style="margin-top:12px;display:grid;gap:7px"></div></div>
+  <div class="mini-panel"><div class="feature-icon">⏳</div><h3>Mini focus timer</h3><p>Take a short focus session, then remember to pause and stretch.</p><div class="timer-display" id="timerDisplay">05:00</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="primary" id="timerButton" onclick="toggleTimer()">Start focus</button><button class="secondary" onclick="resetTimer()">Reset</button></div><small id="timerMessage" style="display:block;color:#a16b86;margin-top:10px">Five calm minutes, just for you.</small></div>
+  <div class="mini-panel"><div class="feature-icon">🎓</div><h3>Exam countdown</h3><p>Set an important exam or deadline and see how many days you have left.</p><input id="examName" placeholder="Exam or deadline name" style="width:100%;border:1px solid #f1bfd5;border-radius:12px;padding:11px;margin:5px 0;font:inherit"><input id="examDate" type="date" style="width:100%;border:1px solid #f1bfd5;border-radius:12px;padding:11px;margin:5px 0;font:inherit"><button class="secondary" onclick="setExamCountdown()">Set countdown</button><div id="examResult" style="margin-top:12px;color:#c43b7b;font-weight:800"></div></div>
+ </div>
+</section>
+
+
+<section class="section" id="quicknotes">
+ <div class="section-head"><div><div class="kicker">07 · Keep the important things close</div><h2>Quick notes & reminders 📌</h2><p class="sub">Save ideas, class reminders, deadlines or anything you don't want to forget.</p></div></div>
+ <div class="panel">
+  <textarea id="quickNoteInput" placeholder="Write a reminder or quick note..." style="width:100%;min-height:90px;border:1px solid #f2bfd5;border-radius:16px;padding:14px;font:inherit;background:#fffafd;color:#66304c"></textarea>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button class="primary" onclick="saveQuickNote()">Save note</button><span style="color:#9a7085;align-self:center;font-size:.85rem">Your notes stay saved in this browser.</span></div>
+  <div id="quickNotesList" class="saved"></div>
+ </div>
+</section>
+
+<section class="section" id="journal">
+ <div class="section-head"><div><div class="kicker">08 · A soft place to land</div><h2>Your little happiness journal</h2><p class="sub">Save a thought, a win, or one tiny thing that made today better.</p></div></div>
+ <div class="panel"><div class="journal"><textarea id="journalText" placeholder="Today, one thing I'm grateful for is..."></textarea><button class="primary" onclick="saveJournal()">Save my note ♡</button></div><div class="saved" id="entries"></div></div>
+</section>
+<footer>Made with <strong>♡</strong> and a little sparkle · <strong>MoodBloom</strong> — bloom at your own pace 🌸</footer>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}
+async function summarizePdf(){
+ const fileInput=document.getElementById('pdfFile'),status=document.getElementById('pdfStatus'),output=document.getElementById('pdfSummary'),button=document.getElementById('summarizePdfBtn');
+ const file=fileInput.files&&fileInput.files[0];
+ if(!file){status.textContent='Please choose a PDF file first.';return;}
+ if(file.type!=='application/pdf'&&!file.name.toLowerCase().endsWith('.pdf')){status.textContent='Please select a PDF file.';return;}
+ if(!window.pdfjsLib){status.textContent='PDF reader could not load. Check your internet connection and refresh the page.';return;}
+ button.disabled=true;status.textContent='Reading your PDF…';output.textContent='Extracting text from the document…';
+ try{
+  const bytes=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument({data:bytes}).promise;
+  let fullText='';
+  for(let pageNo=1;pageNo<=pdf.numPages;pageNo++){
+   const page=await pdf.getPage(pageNo),content=await page.getTextContent();
+   fullText+=content.items.map(item=>item.str).join(' ')+'\n';
+   status.textContent='Reading page '+pageNo+' of '+pdf.numPages+'…';
+  }
+  const clean=fullText.replace(/\s+/g,' ').trim();
+  if(clean.length<80){throw new Error('Very little selectable text was found. This may be a scanned PDF; try a text-based PDF.');}
+  const sentences=(clean.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).map(x=>x.trim()).filter(x=>x.length>35);
+  if(!sentences.length)throw new Error('Could not find enough readable sentences in this PDF.');
+  const words=clean.toLowerCase().match(/[a-z0-9]{3,}/g)||[],freq={};
+  words.forEach(w=>freq[w]=(freq[w]||0)+1);
+  const ranked=sentences.map((sentence,index)=>{
+   const ws=sentence.toLowerCase().match(/[a-z0-9]{3,}/g)||[];
+   const score=ws.reduce((sum,w)=>sum+Math.log(1+(freq[w]||0)),0)/Math.max(1,Math.sqrt(ws.length));
+   return {sentence,index,score};
+  });
+  const count=Math.min(6,Math.max(3,Math.ceil(sentences.length*.18)));
+  const chosen=ranked.sort((a,b)=>b.score-a.score).slice(0,count).sort((a,b)=>a.index-b.index);
+  output.textContent='SUMMARY OF '+file.name+'\n\n'+chosen.map((x,i)=>(i+1)+'. '+x.sentence).join('\n\n')+'\n\nKey points selected from '+pdf.numPages+' page(s).';
+  status.textContent='Summary ready! '+pdf.numPages+' page(s) processed.';
+ }catch(err){status.textContent=err.message||'Sorry, this PDF could not be read.';output.textContent='Try another text-based PDF. Scanned/image-only PDFs may not contain selectable text.';}
+ finally{button.disabled=false;}
+}
+function copyPdfSummary(){const text=document.getElementById('pdfSummary').textContent;if(!text.trim())return;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>document.getElementById('pdfStatus').textContent='Summary copied!').catch(()=>document.getElementById('pdfStatus').textContent='Copy was not available in this browser.');}else{document.getElementById('pdfStatus').textContent='Copy is not available in this browser.';}}
+function clearPdfSummary(){document.getElementById('pdfFile').value='';document.getElementById('pdfSummary').textContent='Your summary will appear here after you upload a PDF.';document.getElementById('pdfStatus').textContent='No PDF selected yet.';}
+const data={
+ Happy:{notes:["Your joy is contagious. Keep being the little ray of sunshine you are! ☀️","You bring your own kind of magic into ordinary days. ✨","Your smile is a superpower. Never underestimate it! 💗"],activity:"Make a tiny celebration playlist or share a compliment with someone."},
+ Sad:{notes:["You don't have to be cheerful every second. You deserve kindness exactly as you are. 💗","Cloudy moments pass. Be gentle with yourself while they do. 🌷","You matter more than you know, and brighter moments can still find you. 🦋"],activity:"Draw a silly doodle, listen to a comforting song, or message someone you trust."},
+ Angry:{notes:["Big feelings don't make you a bad person. Give yourself a moment and choose your next step. 🌸","You can pause, reset, and come back with a clearer mind. You've got this."],activity:"Try a 60-second pause, stretch gently, or solve a quick puzzle."},
+ Tired:{notes:["Rest is productive too. You are allowed to recharge. ☁️","You don't need to do it all today. One small step is enough. 💕"],activity:"Take a screen break, sip some water, or try the easy word puzzle."},
+ Stressed:{notes:["One thing at a time. You can make progress without having everything figured out. 🌱","Take a breath. This moment is just one page, not the whole story. 💌"],activity:"Try slow breathing, write down one next step, or play a gentle riddle."},
+ Confident:{notes:["Look at you showing up for yourself! Keep that brilliant energy. 👑","You are capable of learning things you haven't even tried yet. 🚀"],activity:"Try the quick riddle, learn a new word, or set yourself a fun challenge."}
+};
+let currentMood='Happy',score=0,riddleIndex=0,wordIndex=0,answered=false;
+let moodTapCount=0;
+let moodSoundTurn=0;
+function playMoodClickSound(){
+ if(!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window))return;
+ window.speechSynthesis.cancel();
+ const words=moodSoundTurn++%2===0?'Faaaaahhhhhhhhh!':'Okiieeeeeeeeeee!';
+ const voice=new SpeechSynthesisUtterance(words);
+ voice.rate=0.72;
+ voice.pitch=1.5;
+ voice.volume=1;
+ window.speechSynthesis.speak(voice);
+}
+function pickMood(m,el){playMoodClickSound();currentMood=m;document.querySelectorAll('.mood').forEach(x=>x.classList.remove('active'));el.classList.add('active');showMood();sparkles();if(m==='Sad')openTapMood();else closeTapMood()}
+function openTapMood(){moodTapCount=0;document.getElementById('tapMoodTitle').textContent='Let’s send those blah vibes away 🫧';document.querySelector('#tapMoodModal .tap-card > p').textContent='Tap the little floating cloud 7 times to chase away the blah vibes!';document.getElementById('tapCount').textContent='0 / 7 taps';document.getElementById('tapProgress').style.width='0%';document.getElementById('stressBubble').textContent='☁️';document.getElementById('tapMoodModal').classList.add('show')}
+function closeTapMood(){document.getElementById('tapMoodModal').classList.remove('show')}
+function tapMoodBubble(){if(moodTapCount>=7)return;moodTapCount++;const bubble=document.getElementById('stressBubble');bubble.textContent=['☁️','🫧','💭','✨'][moodTapCount%4];document.getElementById('tapCount').textContent=moodTapCount+' / 7 taps';document.getElementById('tapProgress').style.width=(moodTapCount/7*100)+'%';bubble.animate([{transform:'scale(1)'},{transform:'scale(.78) rotate(-8deg)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:230});if(moodTapCount===7){bubble.textContent='🌈';document.getElementById('tapMoodTitle').textContent='A tiny vibe upgrade! ✨';document.querySelector('#tapMoodModal .tap-card > p').textContent='You did the thing. Mood reset unlocked — welcome to your better-ish era!';setTimeout(()=>{closeTapMood();currentMood='Happy';const happy=[...document.querySelectorAll('.mood')].find(x=>x.getAttribute('onclick').includes("'Happy'"));document.querySelectorAll('.mood').forEach(x=>x.classList.remove('active'));if(happy)happy.classList.add('active');showMood();document.getElementById('moodTitle').textContent='Vibe upgrade unlocked! ✨';document.getElementById('compliment').textContent='You made space for a tiny reset. That counts. Main character energy! 💗';document.getElementById('activity').textContent='Keep it gentle: choose one small thing that feels good right now.';},900)}}
+function showMood(){let d=data[currentMood];document.getElementById('moodTitle').textContent=currentMood+' vibes deserve a little love 💌';newCompliment();document.getElementById('activity').textContent=d.activity;const memes=document.getElementById('happyReactions');memes.hidden=currentMood!=='Happy';const cloudButton=document.getElementById('cloudGameLaunch');cloudButton.hidden=currentMood!=='Sad';document.getElementById('moodResult').classList.add('show')}
+function newCompliment(){let a=data[currentMood].notes;document.getElementById('compliment').textContent=a[Math.floor(Math.random()*a.length)]}
+function scrollToGame(){document.querySelector('#play').scrollIntoView({behavior:'smooth'})}
+function goToSection(event, sectionId){
+ const target=document.getElementById(sectionId);
+ if(event)event.preventDefault();
+ if(!target)return;
+ target.scrollIntoView({behavior:'smooth',block:'start'});
+ history.replaceState(null,'','#'+sectionId);
+}
+function surprise(){let m=Object.keys(data)[Math.floor(Math.random()*6)];let el=[...document.querySelectorAll('.mood')].find(x=>x.innerText.toLowerCase().includes(m.toLowerCase()));pickMood(m,el);document.querySelector('#mood').scrollIntoView({behavior:'smooth'})}
+const riddles=[{q:'What has hands but cannot clap?',o:['A clock','A robot','A tree','A book'],a:'A clock',why:'Tick-tock! A clock has hands.'},{q:'What gets wetter the more it dries?',o:['A towel','A cloud','A sponge','The sun'],a:'A towel',why:'A towel dries things and gets wet!'},{q:'What has a face and two hands but no arms or legs?',o:['A doll','A clock','A photo','A statue'],a:'A clock',why:'A clock has a face and hands.'},{q:'I am full of holes but still hold water. What am I?',o:['A net','A sponge','A basket','A sieve'],a:'A sponge',why:'A sponge is full of tiny holes!'}];
+function renderRiddle(){answered=false;let r=riddles[riddleIndex];document.getElementById('riddle').textContent=r.q;document.getElementById('riddleFeedback').textContent='';document.getElementById('riddleChoices').innerHTML=r.o.map(x=>`<button class="choice" onclick="answerRiddle('${x.replace(/'/g,"\\'")}')">${x}</button>`).join('')}
+function answerRiddle(x){if(answered)return;answered=true;let r=riddles[riddleIndex];let ok=x===r.a;document.getElementById('riddleFeedback').textContent=ok?'✨ '+r.why:'Almost! The answer is '+r.a+'. Keep going!';if(ok)addPoint();document.querySelectorAll('#riddleChoices button').forEach(b=>b.disabled=true)}
+function nextRiddle(){riddleIndex=(riddleIndex+1)%riddles.length;renderRiddle()}
+const words=[['L I M S E','SMILE'],['R T A E H','HEART'],['R O W E F L','FLOWER'],['R A D E M','DREAM'],['D K N I','KIND']];
+function renderWord(){document.getElementById('scramble').textContent=words[wordIndex][0];document.getElementById('wordInput').value='';document.getElementById('wordFeedback').textContent=''}
+function checkWord(){let v=document.getElementById('wordInput').value.trim().toUpperCase();if(v===words[wordIndex][1]){document.getElementById('wordFeedback').textContent='You got it! Word wizard ✨';addPoint()}else document.getElementById('wordFeedback').textContent='Not quite — give it another try! 💗'}
+function nextWord(){wordIndex=(wordIndex+1)%words.length;renderWord()}
+function addPoint(){score++;document.getElementById('score').textContent=score;sparkles()}
+const jokes=['Why did the teddy bear say no to dessert? Because it was already stuffed! 🧸','What do you call a sleeping bull? A bulldozer! 🐂','Why was the math book sad? It had too many problems. 📚','What kind of tree fits in your hand? A palm tree! 🌴','Why did the banana go to the doctor? It wasn’t peeling well! 🍌','What do clouds wear under their clothes? Thunderwear! ☁️'];
+function newJoke(){let el=document.getElementById('joke');let old=el.textContent;let j;do{j=jokes[Math.floor(Math.random()*jokes.length)]}while(j===old);el.textContent=j;sparkles()}
+function saveJournal(){let t=document.getElementById('journalText'),v=t.value.trim();if(!v){t.focus();return}let list=JSON.parse(localStorage.getItem('moodbloomEntries')||'[]');list.unshift({text:v,date:new Date().toLocaleString()});localStorage.setItem('moodbloomEntries',JSON.stringify(list.slice(0,12)));t.value='';renderEntries();sparkles()}
+function renderEntries(){let list=JSON.parse(localStorage.getItem('moodbloomEntries')||'[]');document.getElementById('entries').innerHTML=list.map(e=>`<div class="entry"><time>${e.date}</time>${escapeHTML(e.text)}</div>`).join('')}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function sparkles(){for(let i=0;i<9;i++){let s=document.createElement('span');s.className='sparkle';s.textContent=['✦','♡','✧','🌸'][Math.floor(Math.random()*4)];s.style.left=(35+Math.random()*30)+'vw';s.style.top=(45+Math.random()*25)+'vh';document.body.appendChild(s);setTimeout(()=>s.remove(),1000)}}
+
+let todoItems=JSON.parse(localStorage.getItem('moodbloomTodos')||'[]'),todoFilter='all';
+function persistTodos(){localStorage.setItem('moodbloomTodos',JSON.stringify(todoItems));renderTodos()}
+function renderTodos(){
+ const list=document.getElementById('todoList'),filtered=todoItems.filter(t=>todoFilter==='all'||(todoFilter==='done'?t.done:!t.done));
+ const done=todoItems.filter(t=>t.done).length,total=todoItems.length,pct=total?Math.round(done/total*100):0;
+ document.getElementById('todoPercent').textContent=pct+'%';document.getElementById('todoProgress').style.width=pct+'%';document.getElementById('todoCount').textContent=done+' of '+total+' tasks completed';
+ list.innerHTML=filtered.length?filtered.map(t=>`<div class="todo-item ${t.done?'done':''}"><input type="checkbox" aria-label="Mark task complete" ${t.done?'checked':''} onchange="toggleTodo(${t.id})"><div class="task">${escapeHTML(t.text)}<small>Added to your day · ${t.done?'Nice work!':'You can do it!'}</small></div><button class="delete-task" aria-label="Delete task" onclick="deleteTodo(${t.id})">×</button></div>`).join(''):'<div class="empty-state">🌸 Nothing here yet. Add a little task to get started!</div>';
+}
+document.getElementById('todoForm').addEventListener('submit',e=>{e.preventDefault();let input=document.getElementById('todoInput'),v=input.value.trim();if(!v)return;todoItems.unshift({id:Date.now(),text:v,done:false});input.value='';todoFilter='all';document.querySelectorAll('.todo-filter').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));persistTodos();sparkles()});
+function toggleTodo(id){todoItems=todoItems.map(t=>t.id===id?{...t,done:!t.done}:t);persistTodos();if(todoItems.find(t=>t.id===id)?.done)sparkles()}
+function deleteTodo(id){todoItems=todoItems.filter(t=>t.id!==id);persistTodos()}
+function setTodoFilter(f,el){todoFilter=f;document.querySelectorAll('.todo-filter').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderTodos()}
+let timerSeconds=300,timerInterval=null;
+function updateTimer(){document.getElementById('timerDisplay').textContent=String(Math.floor(timerSeconds/60)).padStart(2,'0')+':'+String(timerSeconds%60).padStart(2,'0')}
+function toggleTimer(){let b=document.getElementById('timerButton');if(timerInterval){clearInterval(timerInterval);timerInterval=null;b.textContent='Resume focus';document.getElementById('timerMessage').textContent='Paused. Take your time.';return}if(timerSeconds<=0)timerSeconds=300;b.textContent='Pause';timerInterval=setInterval(()=>{timerSeconds--;updateTimer();if(timerSeconds<=0){clearInterval(timerInterval);timerInterval=null;b.textContent='Start again';document.getElementById('timerMessage').textContent='Lovely work! Time for a little break. 🌷';sparkles()}},1000)}
+function resetTimer(){if(timerInterval)clearInterval(timerInterval);timerInterval=null;timerSeconds=300;updateTimer();document.getElementById('timerButton').textContent='Start focus';document.getElementById('timerMessage').textContent='Five calm minutes, just for you.'}
+
+
+let studySessions=JSON.parse(localStorage.getItem('moodbloomStudy')||'[]');
+function renderStudy(){let el=document.getElementById('studySessions');if(!el)return;el.innerHTML=studySessions.length?studySessions.map(s=>`<div class="study-item"><strong>${escapeHTML(s.subject)}</strong> · ${escapeHTML(s.topic)}</div>`).join(''):'<small style="color:#a77a91">Your planned sessions will appear here.</small>'}
+function addStudySession(){let a=document.getElementById('studySubject'),b=document.getElementById('studyTopic');if(!a.value.trim()||!b.value.trim()){(a.value.trim()?b:a).focus();return}studySessions.unshift({subject:a.value.trim(),topic:b.value.trim()});studySessions=studySessions.slice(0,6);localStorage.setItem('moodbloomStudy',JSON.stringify(studySessions));a.value='';b.value='';renderStudy();sparkles()}
+function setExamCountdown(){let name=document.getElementById('examName').value.trim(),date=document.getElementById('examDate').value,el=document.getElementById('examResult');if(!name||!date){el.textContent='Add an exam name and date first.';return}let target=new Date(date+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);let days=Math.ceil((target-today)/86400000);el.textContent=days<0?'That date has passed. Choose a future date.':days===0?name+' is today. You’ve got this!':days+' days until '+name+'!';if(days>=0){localStorage.setItem('moodbloomExam',JSON.stringify({name,date}));sparkles()}}
+function loadExam(){let e=JSON.parse(localStorage.getItem('moodbloomExam')||'null');if(e){document.getElementById('examName').value=e.name;document.getElementById('examDate').value=e.date;setExamCountdown()}}
+function saveQuickNote(){let input=document.getElementById('quickNoteInput'),v=input.value.trim();if(!v){input.focus();return}let arr=JSON.parse(localStorage.getItem('moodbloomQuickNotes')||'[]');arr.unshift({text:v,date:new Date().toLocaleString()});localStorage.setItem('moodbloomQuickNotes',JSON.stringify(arr.slice(0,15)));input.value='';renderQuickNotes();sparkles()}
+function renderQuickNotes(){let el=document.getElementById('quickNotesList');if(!el)return;let arr=JSON.parse(localStorage.getItem('moodbloomQuickNotes')||'[]');el.innerHTML=arr.length?arr.map((n,i)=>`<div class="quick-note"><small style="display:block;color:#bd7a9a;margin-bottom:4px">${n.date}</small>${escapeHTML(n.text)} <button class="delete-task" style="float:right" onclick="deleteQuickNote(${i})">×</button></div>`).join(''):'<div class="empty-state">📌 Your saved notes will show up here.</div>'}
+function deleteQuickNote(i){let arr=JSON.parse(localStorage.getItem('moodbloomQuickNotes')||'[]');arr.splice(i,1);localStorage.setItem('moodbloomQuickNotes',JSON.stringify(arr));renderQuickNotes()}
+
+renderRiddle();renderWord();renderEntries();renderTodos();renderStudy();renderQuickNotes();updateTimer();loadExam();
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAoOccDXQ4RR7SdbHDboPvJwIoSd9dGws",
+    authDomain: "moodbloom-75646.firebaseapp.com",
+    projectId: "moodbloom-75646",
+    storageBucket: "moodbloom-75646.firebasestorage.app",
+    messagingSenderId: "694048667266",
+    appId: "1:694048667266:web:a37b547b55537e5e91e69b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const gate = document.getElementById("authGate");
+  const status = document.getElementById("authStatus");
+  const usernameInput = document.getElementById("usernameInput");
+  const passwordInput = document.getElementById("passwordInput");
+  const createButton = document.getElementById("createAccountButton");
+  const loginButton = document.getElementById("loginButton");
+  const userbar = document.getElementById("authUserbar");
+  const signedInLabel = document.getElementById("signedInLabel");
+  const signOutButton = document.getElementById("signOutButton");
+  const storageKeys = ["moodbloomEntries", "moodbloomTodos", "moodbloomStudy", "moodbloomExam", "moodbloomQuickNotes"];
+  let syncing = false, syncTimer;
+  const usernameEmail = name => name.trim().toLowerCase() + "@moodbloom.app";
+  function credentials(){
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+    if(!/^[a-zA-Z0-9._-]{3,24}$/.test(username)) throw new Error("Username must be 3–24 characters and use only letters, numbers, dots, _ or -.");
+    if(password.length < 6) throw new Error("Please use a password with at least 6 characters.");
+    return {username, password};
+  }
+  function setBusy(b){createButton.disabled=b;loginButton.disabled=b;}
+  createButton.addEventListener("click", async () => {
+    try {
+      const {username,password}=credentials(); setBusy(true); status.textContent="Creating your MoodBloom account…";
+      const result=await createUserWithEmailAndPassword(auth, usernameEmail(username), password);
+      await updateProfile(result.user,{displayName:username});
+      status.textContent="Account created! Opening your MoodBloom… 🌸";
+    } catch(e){ status.textContent = e.code === "auth/email-already-in-use" ? "That username is already taken. Please choose another." : (e.message || "Could not create account."); }
+    finally{setBusy(false);}
+  });
+  loginButton.addEventListener("click", async () => {
+    try {
+      const {username,password}=credentials(); setBusy(true); status.textContent="Logging you in…";
+      await signInWithEmailAndPassword(auth, usernameEmail(username), password);
+    } catch(e){ status.textContent = e.code === "auth/invalid-credential" || e.code === "auth/user-not-found" ? "Username or password is incorrect." : (e.message || "Could not log in."); }
+    finally{setBusy(false);}
+  });
+  async function syncFromCloud(user){
+    syncing=true;
+    try {
+      const ref=doc(db,"moodbloomUsers",user.uid), snap=await getDoc(ref);
+      if(snap.exists()){
+        const cloud=snap.data().savedData || {};
+        for(const key of storageKeys) if(Object.prototype.hasOwnProperty.call(cloud,key)) localStorage.setItem(key,cloud[key]);
+      } else {
+        const savedData={}; for(const key of storageKeys){const value=localStorage.getItem(key);if(value!==null)savedData[key]=value;}
+        await setDoc(ref,{username:user.displayName||"Bloom friend",savedData,updatedAt:serverTimestamp()});
+      }
+      sessionStorage.setItem("moodbloomCloudLoaded",user.uid);
+    } catch(e){ status.textContent="Signed in, but cloud sync needs Firestore setup. " + (e.message||""); }
+    finally{syncing=false;}
+  }
+  async function syncToCloud(user){
+    if(!user || syncing)return;
+    const savedData={}; for(const key of storageKeys){const value=localStorage.getItem(key);if(value!==null)savedData[key]=value;}
+    try{await setDoc(doc(db,"moodbloomUsers",user.uid),{username:user.displayName||"Bloom friend",savedData,updatedAt:serverTimestamp()},{merge:true});}
+    catch(e){console.warn("MoodBloom cloud sync failed:",e);}
+  }
+  const originalSetItem=localStorage.setItem.bind(localStorage);
+  localStorage.setItem=function(key,value){originalSetItem(key,value);if(storageKeys.includes(key)&&auth.currentUser&&!syncing){clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncToCloud(auth.currentUser),700);}};
+  signOutButton.addEventListener("click", async () => {try{await signOut(auth);status.textContent="You have logged out. See you soon! 🌸";}catch(e){alert(e.message||"Could not log out.");}});
+  onAuthStateChanged(auth, async user => {
+    if(user){
+      signedInLabel.textContent="Hi, "+(user.displayName||"Bloom friend")+" 🌸";
+      userbar.hidden=false; gate.hidden=true; document.body.classList.remove("auth-locked");
+      if(sessionStorage.getItem("moodbloomCloudLoaded")!==user.uid){await syncFromCloud(user);location.reload();}
+    } else {userbar.hidden=true;gate.hidden=false;document.body.classList.add("auth-locked");sessionStorage.removeItem("moodbloomCloudLoaded");}
+  });
+</script>
+
+</body></html>
