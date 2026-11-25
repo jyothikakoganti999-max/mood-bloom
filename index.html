@@ -391,7 +391,7 @@ renderRiddle();renderWord();renderEntries();renderTodos();renderStudy();renderQu
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
-
+import { getAI, getGenerativeModel, GoogleAIBackend } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-ai.js";
   const firebaseConfig = {
     apiKey:"AIzaSyAoOccDXQ4wRR7SdbHDboPvJwIoSd9dGws",
     authDomain: "moodbloom-75646.firebaseapp.com",
