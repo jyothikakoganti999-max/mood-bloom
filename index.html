@@ -465,7 +465,10 @@ renderRiddle();renderWord();renderEntries();renderTodos();renderStudy();renderQu
     if(user){
       signedInLabel.textContent="Hi, "+(user.displayName||"Bloom friend")+" 🌸";
       userbar.hidden=false; gate.hidden=true; document.body.classList.remove("auth-locked");
-      if(sessionStorage.getItem("moodbloomCloudLoaded")!==user.uid){await syncFromCloud(user);location.reload();}
+      if(sessionStorage.getItem("moodbloomCloudLoaded")!==user.uid){
+  await syncFromCloud(user);
+  renderEntries(); renderTodos(); renderStudy(); renderQuickNotes(); loadExam();
+}
     } else {userbar.hidden=true;gate.hidden=false;document.body.classList.add("auth-locked");sessionStorage.removeItem("moodbloomCloudLoaded");}
   });
 </script>
