@@ -465,6 +465,7 @@ renderRiddle();renderWord();renderEntries();renderTodos();renderStudy();renderQu
     if(user){
       signedInLabel.textContent="Hi, "+(user.displayName||"Bloom friend")+" 🌸";
       userbar.hidden=false; gate.hidden=true; document.body.classList.remove("auth-locked");
+      window.scrollTo({top: 0, behavior: "instant"});
       if(sessionStorage.getItem("moodbloomCloudLoaded")!==user.uid){
   await syncFromCloud(user);
   renderEntries(); renderTodos(); renderStudy(); renderQuickNotes(); loadExam();
